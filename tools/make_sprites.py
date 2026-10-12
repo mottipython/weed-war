@@ -7,11 +7,10 @@ under assets/art.
 characters.jpeg and plants.jpeg are sheets: several drawings on one flat magenta
 background, not touching. Each sheet is cut into its separate drawings, which are
 read off in rows, left to right, and given the names listed below. meadow.jpeg is a
-full picture and is saved as JPEG. Needs ImageMagick, numpy and scipy.
+full picture and is saved as JPEG. Needs ImageMagick and numpy.
 """
 import subprocess
 import numpy as np
-from scipy import ndimage
 
 SRC, OUT = "assets/src", "assets/art"
 SHEETS = {
@@ -34,18 +33,29 @@ def key(img):
     alpha = np.clip(1.0 - (spill - 24) / 70.0, 0, 1)
     return np.dstack([r, g, b, alpha * 255]).clip(0, 255).astype(np.uint8)
 
+def runs(on, gap):
+    """Stretches where `on` is true, joining ones separated by less than `gap`."""
+    out, start, last = [], None, None
+    for i, v in enumerate(on):
+        if not v: continue
+        if start is None: start = i
+        elif i - last > gap: out.append((start, last + 1)); start = i
+        last = i
+    if start is not None: out.append((start, last + 1))
+    return [r for r in out if r[1] - r[0] > 30]
+
 def pieces(a, rows):
-    """The separate drawings on a sheet, in reading order."""
-    solid = ndimage.binary_dilation(a[..., 3] > 128, iterations=12)  # join a figure's loose bits
-    labels, n = ndimage.label(solid)
-    boxes = [b for b in ndimage.find_objects(labels) if (b[0].stop - b[0].start) * (b[1].stop - b[1].start) > 4000]
-    boxes.sort(key=lambda b: (b[0].start + b[0].stop) / 2)
-    per_row = -(-len(boxes) // rows)
+    """The separate drawings on a sheet, in reading order: split into rows by the
+    empty bands between them, then each row into drawings by the empty gaps."""
+    solid = a[..., 3] > 128
+    bands = runs(solid.sum(axis=1) > 2, 40)
+    if len(bands) != rows:
+        raise SystemExit(f"found {len(bands)} rows of drawings, expected {rows}")
     out = []
-    for r in range(rows):
-        row = sorted(boxes[r * per_row:(r + 1) * per_row], key=lambda b: b[1].start)
-        out += row
-    return [a[b[0], b[1]] for b in out]
+    for y0, y1 in bands:
+        for x0, x1 in runs(solid[y0:y1].sum(axis=0) > 2, 40):
+            out.append(a[y0:y1, x0:x1])
+    return out
 
 def trim(a):
     solid = a[..., 3] > 128
