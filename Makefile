@@ -1,5 +1,5 @@
 # The Weed War - a screensaver of Lio's weed war from Neal Stephenson's "Anathem"
-VERSION  := 1.0.0
+VERSION  := 1.0.1
 PREFIX   ?= /usr
 SYSCONFDIR ?= /etc
 DESTDIR  ?=

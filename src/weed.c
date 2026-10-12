@@ -418,7 +418,11 @@ static void update(double dt)
     double gx, gy, t = T / CAMPAIGN;
     lio_goal(t > 1 ? 1 : t, &gx, &gy);
     double dx = gx - lio_x, dy = gy - lio_y, d = hypot(dx, dy * 0.6);
-    lio_busy = d < 0.03;
+    /* he settles to his weeding and stays at it until the fighting has moved well away */
+    static double held;
+    held += dt;
+    if (!lio_busy && d < 0.03) { lio_busy = 1; held = 0; }
+    else if (lio_busy && d > 0.12 && held > 5) { lio_busy = 0; held = 0; }
     if (!lio_busy) { double sp = 0.085 * dt / d; lio_x += dx * sp; lio_y += dy * sp; lio_dir = dx >= 0 ? 1 : -1; }
 }
 
@@ -491,10 +495,10 @@ static void draw_scene(SDL_Renderer *r, int w, int h)
         }
         if (j == lio_row && !lio_drawn) { /* Lio, in among it */
             double tall = h * 0.15 * (0.72 + 0.4 * lio_y);
-            int which = lio_busy ? (fmod(anim_t, 6) < 4.4 ? SP_LIO_WEED : SP_LIO_PROUD) : (fmod(anim_t * 3, 2) < 1 ? SP_LIO_WALK1 : SP_LIO_WALK2);
+            int which = lio_busy ? (fmod(anim_t, 22) < 19 ? SP_LIO_WEED : SP_LIO_PROUD) : (fmod(anim_t * 2.2, 2) < 1 ? SP_LIO_WALK1 : SP_LIO_WALK2);
             double lw = tall * sprite[which].w / sprite[which].h;
             disc(lsx, lsy, lw * 0.4, col(INK, 0.28), col(INK, 0));
-            pic_part(which, lsx - lw / 2, lsy - tall + (lio_busy ? 0 : fabs(sin(anim_t * 9)) * unit * 0.3), lw, tall, 0, 1, 0, !lio_busy && lio_dir < 0);
+            pic_part(which, lsx - lw / 2, lsy - tall + (lio_busy ? 0 : fabs(sin(anim_t * 2.2 * M_PI)) * unit * 0.3), lw, tall, 0, 1, 0, lio_dir < 0);
             lio_drawn = 1;
         }
     }
