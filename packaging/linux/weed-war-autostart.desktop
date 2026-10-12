@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=The Weed War screensaver
+Comment=Start the weed war when the session has been idle
+Exec=weed-war-screensaver watch
+Icon=weed-war
+NoDisplay=true
+X-GNOME-Autostart-enabled=true

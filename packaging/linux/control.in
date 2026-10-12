@@ -1,0 +1,19 @@
+Package: weed-war
+Version: @VERSION@
+Section: games
+Priority: optional
+Architecture: @ARCH@
+Depends: libc6 (>= 2.38), libsdl2-2.0-0 (>= 2.0.18), swayidle
+Installed-Size: @SIZE@
+Maintainer: Motti Schleider <motti.schleider@gmail.com>
+Description: Lio's weed war, a screensaver from "Anathem"
+ Lio's weed war from Neal Stephenson's novel Anathem: Fraa Lio re-enacts the
+ Battle of Trantae in a meadow of clover, with three colours of starblossom for
+ the Sarthian cavalry and slashberry coming up behind them.
+ .
+ The weeds spread patch by patch; Lio's weeding steers them through the false
+ retreat and the pincer, and Erasmas draws it from the wall. A new war every
+ year, never quite the same twice.
+ .
+ On Wayland desktops it starts by itself after five minutes idle.
+ weed-war-screensaver changes the delay or turns it off.

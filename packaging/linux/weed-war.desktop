@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=The Weed War
+Comment=Fraa Lio fights the Battle of Trantae with weeds
+Exec=weed-war --window
+Icon=weed-war
+Categories=Game;LogicGame;Education;Math;
+Keywords=Anathem;Lio;Trantae;starblossom;screensaver;

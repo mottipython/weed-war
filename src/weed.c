@@ -481,8 +481,11 @@ static void draw_scene(SDL_Renderer *r, int w, int h)
                 }
                 continue;
             }
+            /* brambles are drawn on every other patch and larger, so the canes can be made out */
+            int bramble = p->kind == CANE || p->kind == THICKET;
+            if (bramble && ((i + j) & 1)) continue;
             double grown = p->age < 1.2 ? 0.25 + 0.75 * p->age / 1.2 : 1;
-            double tall = cw * BIG[p->kind] * p->size * near * grown;
+            double tall = cw * BIG[p->kind] * (bramble ? 1.45 : 1) * p->size * near * grown;
             if (p->kind == TREE || p->kind == THICKET) disc(x + tall * 0.06, y + tall * 0.08, tall * 0.4, col(INK, 0.22), col(INK, 0));
             pic(PIC[p->kind], x, y + tall * 0.25, tall, 0.5, 1);
         }
