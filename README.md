@@ -1,7 +1,6 @@
 # The Weed War
 
-A screensaver of Lio's weed war, from Neal Stephenson's novel *Anathem*. Runs on
-Linux and Windows.
+A screensaver of Lio's weed war, from Neal Stephenson's novel *Anathem*. Runs on Linux, Windows and macOS. One of the [Anathem screensavers](https://github.com/mottipython/anathem-screensavers).
 
 ![Starblossom closing round Oxas's legions](docs/screenshots/05-surrounded.jpg)
 
